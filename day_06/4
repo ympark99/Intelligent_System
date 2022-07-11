@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr  8 15:10:59 2022
+
+@author: youngmin
+"""
+
+# Ensemble 앙상블
+# 구현방식
+# 1.취합
+import pandas as pd
+pd.options.display.max_columns = 100
+
+from sklearn.datasets import load_breast_cancer
+
+data = load_breast_cancer()
+
+X=pd.DataFrame(data.data, columns=data.feature_names)
+y=pd.Series(data.target)
+
+X.head()
+y.head()
+y.tail()
+y.value_counts()
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(X, y,
+                                                 test_size=0.3,
+                                                 stratify=y,
+                                                 random_state=1)
+
+
+
+# random forest
+from sklearn.ensemble import GradientBoostingClassifier
+
+from sklearn.linear_model import LogisticRegression
+
+base_estimator = LogisticRegression(C=0.001, class_weight='balanced',
+                                    n_jobs=-1,
+                                    random_state=1
+                                    )
+
+model = GradientBoostingClassifier(n_estimators=100,
+                                   learning_rate=0.1,
+                                   max_depth=1,
+                                   subsample=1.0,
+                                   max_features=1.0,
+                                   random_state=1)
+
+model.fit(X_train, y_train)
+
+score = model.score(X_train, y_train)
+print(f'score (Train) : {score}')
+
+score = model.score(X_test, y_test)
+print(f'score (Test) : {score}')
+
+
+
+
+
+
+
+
+
+# 2.부스팅
